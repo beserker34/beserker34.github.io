@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('writeups', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const d = entry.data;
+const base = import.meta.env.BASE_URL;
+const fmt = d.date
+  ? d.date.toLocaleDateString('es-DO', { year: 'numeric', month: 'short', day: 'numeric' })
+  : null;
+---
+<Base title={`${d.machine} · 4PR3ND1Z`} description={d.summary}>
+  <Nav />
+  <article class="wrap wu-article">
+    <a href={`${base}#writeups`} class="back mono">← writeups</a>
+
+    <header class="wu-header">
+      <p class="tag prompt">target: {d.machine.toLowerCase()}</p>
+      <h1>{d.machine}</h1>
+      <div class="wu-meta">
+        <span class={`chip ${d.difficulty.toLowerCase()}`}>{d.difficulty}</span>
+        <span class={`chip ${d.os.toLowerCase()}`}>{d.os}</span>
+        <span class="chip">{d.platform}</span>
+        {fmt && <span class="dim mono" style="font-size:.75rem">{fmt}</span>}
+      </div>
+      {d.tags.length > 0 && (
+        <div class="wu-tags mono">{d.tags.map((t) => <span>#{t}</span>)}</div>
+      )}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <footer class="wu-foot">
+      <a href={`${base}#writeups`} class="btn">← Volver a writeups</a>
+    </footer>
+  </article>
+</Base>
+
+<style is:global>
+  .wu-article { max-width: 780px; padding-top: 40px; padding-bottom: 80px; }
+  .back { display: inline-block; color: var(--text-dim); font-size: 0.8rem; margin-bottom: 28px; }
+  .back:hover { color: var(--purple); }
+  .wu-header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 8px; }
+  .wu-header h1 { font-size: clamp(2rem, 6vw, 3rem); margin: 8px 0 16px; }
+  .wu-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .wu-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; font-size: 0.78rem; color: var(--text-dim); }
+
+  /* --- prosa del writeup --- */
+  .prose { font-size: 1rem; line-height: 1.75; color: var(--text-muted); }
+  .prose h1, .prose h2, .prose h3 { color: var(--text); margin: 2em 0 0.6em; }
+  .prose h1 { font-size: 1.7rem; }
+  .prose h2 {
+    font-size: 1.35rem; padding-bottom: 0.3em; border-bottom: 1px solid var(--border);
+  }
+  .prose h2::before { content: "# "; color: var(--purple); font-family: var(--mono); }
+  .prose h3 { font-size: 1.1rem; color: var(--purple-lit); }
+  .prose p { margin: 1em 0; }
+  .prose strong { color: var(--text); font-weight: 600; }
+  .prose a { color: var(--purple-lit); text-decoration: underline; text-underline-offset: 3px; }
+  .prose ul, .prose ol { margin: 1em 0; padding-left: 1.4em; }
+  .prose li { margin: 0.4em 0; }
+  .prose img { max-width: 100%; border: 1px solid var(--border); border-radius: 6px; margin: 1.2em 0; }
+  .prose code {
+    font-family: var(--mono); font-size: 0.85em;
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 4px; color: var(--purple-lit);
+  }
+  .prose pre {
+    background: #0a0810; border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px; overflow-x: auto; margin: 1.4em 0;
+    font-size: 0.82rem; line-height: 1.55;
+  }
+  .prose pre code { background: none; border: none; padding: 0; color: #d8d2e8; font-size: inherit; }
+  .prose blockquote {
+    border-left: 3px solid var(--purple-deep); padding-left: 16px;
+    color: var(--text-dim); margin: 1.2em 0; font-style: italic;
+  }
+  .prose table { width: 100%; border-collapse: collapse; margin: 1.4em 0; font-size: 0.88rem; }
+  .prose th, .prose td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+  .prose th { background: var(--surface-2); color: var(--text); font-family: var(--mono); font-size: 0.78rem; }
+  .wu-foot { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+</style>

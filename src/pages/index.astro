@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Metrics from '../components/Metrics.astro';
+import Certs from '../components/Certs.astro';
+import Contact from '../components/Contact.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const all = (await getCollection('writeups', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const da = a.data.date ? a.data.date.getTime() : 0;
+    const db = b.data.date ? b.data.date.getTime() : 0;
+    return db - da;
+  });
+
+const total = all.length;
+const byOs = {
+  Linux:   all.filter((w) => w.data.os === 'Linux').length,
+  Windows: all.filter((w) => w.data.os === 'Windows').length,
+};
+---
+<Base title="4PR3ND1Z · Offensive Security">
+  <Nav />
+  <Hero />
+
+  <section id="writeups">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="idx mono">01</span>
+        <h2>Writeups</h2>
+        <span class="dim mono" style="font-size:.78rem">
+          // {total} máquinas · {byOs.Linux} Linux · {byOs.Windows} Windows
+        </span>
+      </div>
+
+      <div class="wu-grid">
+        {all.map((w) => (
+          <a class="card wu" href={`${base}writeups/${w.slug}/`}>
+            <div class="wu-top">
+              <span class="wu-name">{w.data.machine}</span>
+              <span class="wu-plat mono">{w.data.platform}</span>
+            </div>
+            {w.data.summary && <p class="wu-sum">{w.data.summary}</p>}
+            <div class="wu-chips">
+              <span class={`chip ${w.data.difficulty.toLowerCase()}`}>{w.data.difficulty}</span>
+              <span class={`chip ${w.data.os.toLowerCase()}`}>{w.data.os}</span>
+              {w.data.tags.slice(0, 3).map((t) => <span class="chip">{t}</span>)}
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {total === 0 && (
+        <p class="muted mono">// aún no hay writeups publicados — se migran desde Notion.</p>
+      )}
+    </div>
+  </section>
+
+  <Metrics />
+  <Certs />
+  <Contact />
+</Base>
+
+<style>
+  .wu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .wu { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .wu:hover { transform: translateY(-3px); border-color: var(--purple-deep); }
+  .wu-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .wu-name { font-family: var(--display); font-weight: 600; font-size: 1.15rem; color: var(--text); }
+  .wu-plat { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.06em; }
+  .wu-sum { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; flex: 1; }
+  .wu-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  @media (max-width: 820px) { .wu-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .wu-grid { grid-template-columns: 1fr; } }
+</style>

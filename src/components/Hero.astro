@@ -1,0 +1,37 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+<header class="hero">
+  <div class="wrap hero-inner">
+    <p class="tag prompt">whoami</p>
+    <h1>Ramces <span class="hl">"4PR3ND1Z"</span></h1>
+    <p class="pitch mono">Offensive Security · Web &amp; Business Logic · Red Team</p>
+    <p class="blurb">
+      Estudiante de seguridad ofensiva (RD). Certificado <strong>CPTS</strong> y <strong>CWES</strong>,
+      cursando <strong>CWEE</strong>. Me especializo en explotación web, IDOR y fallos de lógica de
+      negocio — donde los escáneres no llegan.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href={`${base}#writeups`}>Ver writeups</a>
+      <a class="btn" href="https://app.hackthebox.com/users/2881312" target="_blank" rel="noopener">HTB Profile ↗</a>
+      <a class="btn" href="https://hackerone.com/4pr3nd1z" target="_blank" rel="noopener">HackerOne ↗</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hero { padding: 84px 0 72px; }
+  .hero-inner { max-width: 760px; }
+  h1 { font-size: clamp(2.4rem, 7vw, 4rem); margin: 10px 0 6px; }
+  .hl { color: var(--purple); }
+  .pitch {
+    font-size: clamp(0.85rem, 2.6vw, 1.05rem);
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    margin-bottom: 22px;
+  }
+  .blurb { font-size: 1.05rem; color: var(--text-muted); max-width: 60ch; margin-bottom: 30px; }
+  .blurb strong { color: var(--text); font-weight: 600; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 560px) { .hero { padding: 52px 0 44px; } }
+</style>

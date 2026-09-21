@@ -1,0 +1,41 @@
+---
+const certs = [
+  { code: 'CPTS', name: 'Certified Penetration Testing Specialist', org: 'HTB Academy', status: 'done',    note: 'AD · Web · Pivoting · Reporting' },
+  { code: 'CWES', name: 'Certified Web Exploitation Specialist',   org: 'HTB Academy', status: 'done',    note: 'Explotación web avanzada' },
+  { code: 'CWEE', name: 'Certified Web Exploitation Expert',        org: 'HTB Academy', status: 'wip',     note: 'En curso' },
+  { code: 'Tec. Desarrollo de Software', name: 'Ingeniería / Tecnólogo', org: 'ITLA', status: 'wip', note: 'En curso' },
+];
+---
+<section id="certs">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="idx mono">03</span>
+      <h2>Certificaciones</h2>
+    </div>
+    <div class="certs">
+      {certs.map((c) => (
+        <div class="card cert">
+          <div class="cert-top">
+            <span class="cert-code mono">{c.code}</span>
+            <span class={`badge ${c.status}`}>{c.status === 'done' ? '✓ Certificado' : '● En curso'}</span>
+          </div>
+          <p class="cert-name">{c.name}</p>
+          <p class="cert-meta mono">{c.org} · {c.note}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .certs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .cert { padding: 20px 22px; }
+  .cert-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+  .cert-code { font-weight: 700; font-size: 1.05rem; color: var(--text); letter-spacing: 0.02em; }
+  .badge { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+  .badge.done { color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 40%, transparent); }
+  .badge.wip  { color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent); }
+  .cert-name { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 6px; }
+  .cert-meta { font-size: 0.75rem; color: var(--text-dim); }
+  @media (max-width: 560px) { .certs { grid-template-columns: 1fr; } }
+</style>

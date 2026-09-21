@@ -1,0 +1,184 @@
+/* ============================================================
+   4PR3ND1Z — sistema de diseño
+   Dark + púrpura. Bordes definidos, mono con carácter,
+   sin gradientes difusos ni glassmorphism.
+   ============================================================ */
+
+@font-face { font-display: swap; }
+
+:root {
+  /* --- superficies --- */
+  --bg:          #0b0910;
+  --bg-grid:     #14101d;
+  --surface:     #141020;
+  --surface-2:   #1b1530;
+  --surface-3:   #241c3d;
+
+  /* --- bordes --- */
+  --border:      #292040;
+  --border-lit:  #3b2f5c;
+
+  /* --- texto --- */
+  --text:        #ece8f5;
+  --text-muted:  #a49cbb;
+  --text-dim:    #6d6584;
+
+  /* --- púrpura (acento específico, no el morado por defecto) --- */
+  --purple:      #a970ff;
+  --purple-lit:  #c6a3ff;
+  --purple-deep: #7b3ff2;
+  --purple-ink:  #4a2b8c;
+  --glow:        rgba(169, 112, 255, 0.14);
+
+  /* --- semánticos --- */
+  --green:  #6ee7a0;
+  --red:    #ff7a7a;
+  --amber:  #f5c765;
+  --cyan:   #6fd6e0;
+
+  /* --- tipografía --- */
+  --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --display: "Space Grotesk", var(--sans);
+
+  --maxw: 1080px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: center top;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+}
+
+/* velo sutil para que el grid no compita con el contenido */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, var(--bg) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* --- tipografía --- */
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+a { color: var(--purple-lit); text-decoration: none; }
+a:hover { color: var(--purple); }
+
+.mono { font-family: var(--mono); }
+
+/* etiqueta técnica reutilizable */
+.tag {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+/* prompt shell decorativo */
+.prompt::before {
+  content: "❯ ";
+  color: var(--purple);
+  font-family: var(--mono);
+}
+
+/* --- secciones --- */
+section { padding: 72px 0; border-top: 1px solid var(--border); }
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.section-head h2 { font-size: 1.6rem; }
+.section-head .idx {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* --- tarjetas base --- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color .18s ease, transform .18s ease;
+}
+.card:hover { border-color: var(--border-lit); }
+
+/* --- botones --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 9px 16px;
+  border-radius: 5px;
+  border: 1px solid var(--border-lit);
+  color: var(--text);
+  background: var(--surface-2);
+  transition: all .16s ease;
+}
+.btn:hover { border-color: var(--purple); color: var(--purple-lit); background: var(--surface-3); }
+.btn-primary {
+  border-color: var(--purple-deep);
+  background: var(--purple-ink);
+  color: var(--text);
+}
+.btn-primary:hover { background: var(--purple-deep); color: #fff; }
+
+/* --- chips de dificultad / OS --- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.chip.easy   { color: var(--green); border-color: color-mix(in srgb, var(--green) 40%, transparent); }
+.chip.medium { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 40%, transparent); }
+.chip.hard   { color: var(--red);   border-color: color-mix(in srgb, var(--red) 40%, transparent); }
+.chip.insane { color: var(--purple-lit); border-color: var(--border-lit); }
+.chip.linux  { color: var(--cyan); border-color: color-mix(in srgb, var(--cyan) 35%, transparent); }
+.chip.windows{ color: #8bb4ff; border-color: rgba(139,180,255,0.35); }
+
+/* --- utilidades --- */
+.muted { color: var(--text-muted); }
+.dim { color: var(--text-dim); }
+.grid { display: grid; gap: 16px; }
+
+@media (max-width: 640px) {
+  section { padding: 52px 0; }
+  .wrap { padding: 0 18px; }
+  body { background-size: 36px 36px; }
+}
