@@ -1,27 +1,27 @@
 ---
 // Métricas reales del perfil HTB (actualiza cuando cambien).
 const stats = [
-  { label: 'HTB Rank',        value: 'Master',   sub: 'Nivel 73' },
-  { label: 'Season 11',       value: '#883',     sub: 'Holo Tier · 720 pts' },
-  { label: 'Máquinas',        value: '59',       sub: 'resueltas' },
-  { label: 'Racha semanal',   value: '27',       sub: 'semanas · récord' },
-  { label: 'Flags',           value: '24/26',    sub: 'season' },
-  { label: 'Miembro desde',   value: 'Nov 2025', sub: 'Dominican Republic' },
+  { label: 'HTB Rank',  labelKey: null,               value: 'Master',   sub: 'Level 73',        subKey: 'stats.sub.level' },
+  { label: 'Season 11', labelKey: null,               value: '#883',     sub: 'Holo Tier · 720 pts', subKey: null },
+  { label: 'Machines',  labelKey: 'stats.label.machines', value: '59',   sub: 'solved',          subKey: 'stats.sub.solved' },
+  { label: 'Weekly streak', labelKey: 'stats.label.streak', value: '27', sub: 'weeks · record',  subKey: 'stats.sub.weeks' },
+  { label: 'Flags',     labelKey: null,               value: '24/26',    sub: 'season',          subKey: null },
+  { label: 'Member since', labelKey: 'stats.label.member', value: 'Nov 2025', sub: 'Dominican Republic', subKey: 'stats.sub.country' },
 ];
 ---
 <section id="stats">
   <div class="wrap">
     <div class="section-head">
       <span class="idx mono">02</span>
-      <h2>Stats</h2>
+      <h2 data-i18n="stats.title">Stats</h2>
       <span class="dim mono" style="font-size:.78rem">// hackthebox.com/users/2881312</span>
     </div>
     <div class="metrics">
       {stats.map((s) => (
         <div class="card metric">
-          <span class="m-label mono">{s.label}</span>
+          <span class="m-label mono" data-i18n={s.labelKey ?? undefined}>{s.label}</span>
           <span class="m-value">{s.value}</span>
-          <span class="m-sub mono">{s.sub}</span>
+          <span class="m-sub mono" data-i18n={s.subKey ?? undefined}>{s.sub}</span>
         </div>
       ))}
     </div>

@@ -1,26 +1,26 @@
 ---
 const certs = [
-  { code: 'CPTS', name: 'Certified Penetration Testing Specialist', org: 'HTB Academy', status: 'done',    note: 'AD · Web · Pivoting · Reporting' },
-  { code: 'CWES', name: 'Certified Web Exploitation Specialist',   org: 'HTB Academy', status: 'done',    note: 'Explotación web avanzada' },
-  { code: 'CWEE', name: 'Certified Web Exploitation Expert',        org: 'HTB Academy', status: 'wip',     note: 'En curso' },
-  { code: 'Tec. Desarrollo de Software', name: 'Ingeniería / Tecnólogo', org: 'ITLA', status: 'wip', note: 'En curso' },
+  { code: 'CPTS', name: 'Certified Penetration Testing Specialist', nameKey: null, org: 'HTB Academy', status: 'done', note: 'AD · Web · Pivoting · Reporting', noteKey: null },
+  { code: 'CWES', name: 'Certified Web Exploitation Specialist',   nameKey: null, org: 'HTB Academy', status: 'done', note: 'Advanced web exploitation',        noteKey: 'certs.note.cwes' },
+  { code: 'CWEE', name: 'Certified Web Exploitation Expert',        nameKey: null, org: 'HTB Academy', status: 'wip',  note: 'In progress',                      noteKey: 'certs.note.wip' },
+  { code: 'Tec. Desarrollo de Software', name: 'Engineering / Technologist', nameKey: 'certs.name.itla', org: 'ITLA', status: 'wip', note: 'In progress', noteKey: 'certs.note.wip' },
 ];
 ---
 <section id="certs">
   <div class="wrap">
     <div class="section-head">
       <span class="idx mono">03</span>
-      <h2>Certificaciones</h2>
+      <h2 data-i18n="certs.title">Certifications</h2>
     </div>
     <div class="certs">
       {certs.map((c) => (
         <div class="card cert">
           <div class="cert-top">
             <span class="cert-code mono">{c.code}</span>
-            <span class={`badge ${c.status}`}>{c.status === 'done' ? '✓ Certificado' : '● En curso'}</span>
+            <span class={`badge ${c.status}`} data-i18n={c.status === 'done' ? 'certs.badge.done' : 'certs.badge.wip'}>{c.status === 'done' ? '✓ Certified' : '● In progress'}</span>
           </div>
-          <p class="cert-name">{c.name}</p>
-          <p class="cert-meta mono">{c.org} · {c.note}</p>
+          <p class="cert-name" data-i18n={c.nameKey ?? undefined}>{c.name}</p>
+          <p class="cert-meta mono">{c.org} · <span data-i18n={c.noteKey ?? undefined}>{c.note}</span></p>
         </div>
       ))}
     </div>

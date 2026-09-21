@@ -10,7 +10,7 @@ const links = [
   <div class="wrap">
     <div class="section-head">
       <span class="idx mono">04</span>
-      <h2>Contacto</h2>
+      <h2 data-i18n="contact.title">Contact</h2>
     </div>
     <div class="contact-grid">
       {links.map((l) => (
@@ -22,14 +22,13 @@ const links = [
       ))}
     </div>
     <p class="cv">
-      <a class="btn btn-primary" href="/cv.pdf" download>Descargar CV (PDF)</a>
-      <span class="dim mono" style="font-size:.75rem">// coloca tu cv.pdf en /public</span>
+      <a class="btn btn-primary" href="/cv.pdf" download data-i18n="contact.cv">Download CV (PDF)</a>
     </p>
   </div>
   <footer class="foot">
     <div class="wrap mono">
       <span>© {new Date().getFullYear()} 4PR3ND1Z</span>
-      <span class="dim">Offensive Security · Dominican Republic</span>
+      <span class="dim" data-i18n="contact.footer.tag">Offensive Security · Dominican Republic</span>
     </div>
   </footer>
 </section>

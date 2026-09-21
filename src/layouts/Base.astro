@@ -4,7 +4,7 @@ const { title = '4PR3ND1Z', description = 'Offensive Security · Web & Business 
 const base = import.meta.env.BASE_URL;
 ---
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,5 +23,81 @@ const base = import.meta.env.BASE_URL;
   </head>
   <body>
     <slot />
+    <script>
+      const I18N = {
+        en: {
+          'hero.pitch': 'Offensive Security · Web & Business Logic · Red Team',
+          'hero.blurb': 'Offensive security professional (Dominican Republic). Certified <strong>CPTS</strong> and <strong>CWES</strong>, currently completing <strong>CWEE</strong>. I specialize in web exploitation, IDOR, and business logic flaws — where scanners don\'t reach.',
+          'hero.cta.writeups': 'View writeups',
+          'stats.title': 'Stats',
+          'stats.label.machines': 'Machines',
+          'stats.label.streak': 'Weekly streak',
+          'stats.label.member': 'Member since',
+          'stats.sub.level': 'Level 73',
+          'stats.sub.solved': 'solved',
+          'stats.sub.weeks': 'weeks · record',
+          'stats.sub.country': 'Dominican Republic',
+          'certs.title': 'Certifications',
+          'certs.badge.done': '✓ Certified',
+          'certs.badge.wip': '● In progress',
+          'certs.note.wip': 'In progress',
+          'certs.note.cwes': 'Advanced web exploitation',
+          'certs.name.itla': 'Engineering / Technologist',
+          'contact.title': 'Contact',
+          'contact.cv': 'Download CV (PDF)',
+          'contact.footer.tag': 'Offensive Security · Dominican Republic',
+        },
+        es: {
+          'hero.pitch': 'Seguridad Ofensiva · Web y Lógica de Negocio · Red Team',
+          'hero.blurb': 'Profesional en seguridad ofensiva (RD). Certificado <strong>CPTS</strong> y <strong>CWES</strong>, cursando <strong>CWEE</strong>. Me especializo en explotación web, IDOR y fallos de lógica de negocio — donde los escáneres no llegan.',
+          'hero.cta.writeups': 'Ver writeups',
+          'stats.title': 'Estadísticas',
+          'stats.label.machines': 'Máquinas',
+          'stats.label.streak': 'Racha semanal',
+          'stats.label.member': 'Miembro desde',
+          'stats.sub.level': 'Nivel 73',
+          'stats.sub.solved': 'resueltas',
+          'stats.sub.weeks': 'semanas · récord',
+          'stats.sub.country': 'República Dominicana',
+          'certs.title': 'Certificaciones',
+          'certs.badge.done': '✓ Certificado',
+          'certs.badge.wip': '● En curso',
+          'certs.note.wip': 'En curso',
+          'certs.note.cwes': 'Explotación web avanzada',
+          'certs.name.itla': 'Ingeniería / Tecnólogo',
+          'contact.title': 'Contacto',
+          'contact.cv': 'Descargar CV (PDF)',
+          'contact.footer.tag': 'Seguridad Ofensiva · República Dominicana',
+        },
+      };
+
+      function setLang(lang, opts = {}) {
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-i18n], [data-i18n-en]').forEach((el) => {
+          let val;
+          if (el.dataset.i18nEn !== undefined) {
+            val = lang === 'es' ? el.dataset.i18nEs : el.dataset.i18nEn;
+          } else {
+            val = I18N[lang][el.getAttribute('data-i18n')];
+          }
+          if (val == null) return;
+          if ('i18nHtml' in el.dataset) el.innerHTML = val;
+          else el.textContent = val;
+        });
+        document.querySelectorAll('.lang-btn').forEach((b) => {
+          b.classList.toggle('is-active', b.dataset.lang === lang);
+        });
+        if (!opts.skipSave) {
+          try { localStorage.setItem('lang', lang); } catch {}
+        }
+      }
+
+      let saved = 'en';
+      try { saved = localStorage.getItem('lang') || 'en'; } catch {}
+      setLang(saved, { skipSave: true });
+      document.querySelectorAll('.lang-btn').forEach((b) => {
+        b.addEventListener('click', () => setLang(b.dataset.lang));
+      });
+    </script>
   </body>
 </html>

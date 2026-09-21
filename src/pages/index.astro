@@ -21,6 +21,10 @@ const byOs = {
   Linux:   all.filter((w) => w.data.os === 'Linux').length,
   Windows: all.filter((w) => w.data.os === 'Windows').length,
 };
+const countLineEn = `// ${total} machines · ${byOs.Linux} Linux · ${byOs.Windows} Windows`;
+const countLineEs = `// ${total} máquinas · ${byOs.Linux} Linux · ${byOs.Windows} Windows`;
+const emptyLineEn = '// no writeups published yet — migrating from Notion.';
+const emptyLineEs = '// aún no hay writeups publicados — se migran desde Notion.';
 ---
 <Base title="4PR3ND1Z · Offensive Security">
   <Nav />
@@ -31,8 +35,8 @@ const byOs = {
       <div class="section-head">
         <span class="idx mono">01</span>
         <h2>Writeups</h2>
-        <span class="dim mono" style="font-size:.78rem">
-          // {total} máquinas · {byOs.Linux} Linux · {byOs.Windows} Windows
+        <span class="dim mono" style="font-size:.78rem" data-i18n-en={countLineEn} data-i18n-es={countLineEs}>
+          {countLineEn}
         </span>
       </div>
 
@@ -54,7 +58,7 @@ const byOs = {
       </div>
 
       {total === 0 && (
-        <p class="muted mono">// aún no hay writeups publicados — se migran desde Notion.</p>
+        <p class="muted mono" data-i18n-en={emptyLineEn} data-i18n-es={emptyLineEs}>{emptyLineEn}</p>
       )}
     </div>
   </section>
