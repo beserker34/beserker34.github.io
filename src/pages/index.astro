@@ -25,6 +25,13 @@ const countLineEn = `// ${total} machines · ${byOs.Linux} Linux · ${byOs.Windo
 const countLineEs = `// ${total} máquinas · ${byOs.Linux} Linux · ${byOs.Windows} Windows`;
 const emptyLineEn = '// no writeups published yet — migrating from Notion.';
 const emptyLineEs = '// aún no hay writeups publicados — se migran desde Notion.';
+
+const PREVIEW = 6;
+const hidden = Math.max(0, total - PREVIEW);
+const moreEn = `Show ${hidden} more`;
+const moreEs = `Ver ${hidden} más`;
+const lessEn = 'Show less';
+const lessEs = 'Ver menos';
 ---
 <Base title="4PR3ND1Z · Offensive Security">
   <Nav />
@@ -40,9 +47,9 @@ const emptyLineEs = '// aún no hay writeups publicados — se migran desde Noti
         </span>
       </div>
 
-      <div class="wu-grid">
-        {all.map((w) => (
-          <a class="card wu" href={`${base}writeups/${w.slug}/`}>
+      <div class="wu-grid" id="wu-grid">
+        {all.map((w, i) => (
+          <a class={`card wu${i >= PREVIEW ? ' is-extra' : ''}`} href={`${base}writeups/${w.slug}/`}>
             <div class="wu-top">
               <span class="wu-name">{w.data.machine}</span>
               <span class="wu-plat mono">{w.data.platform}</span>
@@ -57,6 +64,26 @@ const emptyLineEs = '// aún no hay writeups publicados — se migran desde Noti
         ))}
       </div>
 
+      {hidden > 0 && (
+        <div class="wu-more-wrap">
+          <button
+            type="button"
+            class="btn wu-more mono"
+            id="wu-toggle"
+            aria-expanded="false"
+            aria-controls="wu-grid"
+            data-more-en={moreEn}
+            data-more-es={moreEs}
+            data-less-en={lessEn}
+            data-less-es={lessEs}
+            data-i18n-en={moreEn}
+            data-i18n-es={moreEs}
+          >
+            {moreEn}<span class="wu-more-caret" aria-hidden="true">↓</span>
+          </button>
+        </div>
+      )}
+
       {total === 0 && (
         <p class="muted mono" data-i18n-en={emptyLineEn} data-i18n-es={emptyLineEs}>{emptyLineEn}</p>
       )}
@@ -68,6 +95,44 @@ const emptyLineEs = '// aún no hay writeups publicados — se migran desde Noti
   <Contact />
 </Base>
 
+<script>
+  const grid = document.getElementById('wu-grid');
+  const btn = document.getElementById('wu-toggle');
+
+  if (grid && btn) {
+    const syncLabel = () => {
+      const es = document.documentElement.lang === 'es';
+      const open = grid.classList.contains('is-open');
+      const key = (open ? 'less' : 'more') + (es ? 'Es' : 'En');
+      const label = btn.dataset[key];
+      // keep the shared i18n pass in Base.astro in sync with the current state
+      btn.dataset.i18nEn = btn.dataset[open ? 'lessEn' : 'moreEn'];
+      btn.dataset.i18nEs = btn.dataset[open ? 'lessEs' : 'moreEs'];
+      btn.textContent = label;
+      const caret = document.createElement('span');
+      caret.className = 'wu-more-caret';
+      caret.setAttribute('aria-hidden', 'true');
+      caret.textContent = open ? '↑' : '↓';
+      btn.appendChild(caret);
+    };
+
+    btn.addEventListener('click', () => {
+      const open = grid.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(open));
+      if (!open) {
+        document.getElementById('writeups')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      syncLabel();
+    });
+
+    // language toggle rewrites textContent, so restore the caret afterwards
+    document.querySelectorAll('.lang-btn').forEach((b) => {
+      b.addEventListener('click', () => setTimeout(syncLabel, 0));
+    });
+    syncLabel();
+  }
+</script>
+
 <style>
   .wu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   .wu { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
@@ -77,6 +142,22 @@ const emptyLineEs = '// aún no hay writeups publicados — se migran desde Noti
   .wu-plat { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.06em; }
   .wu-sum { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; flex: 1; }
   .wu-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .wu-grid .wu.is-extra { display: none; }
+  .wu-grid.is-open .wu.is-extra { display: flex; animation: wu-in 0.3s ease both; }
+  @keyframes wu-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .wu-grid.is-open .wu.is-extra { animation: none; }
+  }
+
+  .wu-more-wrap { display: flex; justify-content: center; margin-top: 22px; }
+  .wu-more {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.78rem; letter-spacing: 0.06em; cursor: pointer;
+  }
+  .wu-more:hover { border-color: var(--purple-deep); color: var(--text); }
+  .wu-more-caret { transition: transform 0.2s ease; }
+
   @media (max-width: 820px) { .wu-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 520px) { .wu-grid { grid-template-columns: 1fr; } }
 </style>
