@@ -1,0 +1,139 @@
+---
+const base = import.meta.env.BASE_URL;
+
+// HTB Pro Labs / Mini Pro Labs completados. Añade aquí los siguientes.
+const labs = [
+  {
+    name: 'Mythical',
+    tier: 'Mini Pro Lab',
+    tierEs: 'Mini Pro Lab',
+    org: 'Hack The Box',
+    status: 'done',
+    date: '05 Jul 2026',
+    dateEs: '05 Jul 2026',
+    hours: 10,
+    cpe: 10,
+    certId: 'HTBCERT-D477750E07',
+    pdf: 'certs/mythical.pdf',
+    areas: [
+      'Enumeration',
+      'AD Enumeration & Attacks',
+      'Lateral Movement',
+      'AD Certificate Services',
+      'Local Privilege Escalation',
+      'Situational Awareness',
+      'MSSQL Attacks',
+      'C2 Operations',
+    ],
+  },
+];
+
+const headEn = `// ${labs.filter((l) => l.status === 'done').length} completed · multi-host red team scenarios`;
+const headEs = `// ${labs.filter((l) => l.status === 'done').length} completados · escenarios red team multi-host`;
+---
+<section id="prolabs">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="idx mono">04</span>
+      <h2 data-i18n-en="Pro Labs" data-i18n-es="Pro Labs">Pro Labs</h2>
+      <span class="dim mono" style="font-size:.78rem" data-i18n-en={headEn} data-i18n-es={headEs}>{headEn}</span>
+    </div>
+
+    <div class="labs">
+      {labs.map((l) => (
+        <article class="card lab">
+          <div class="lab-top">
+            <div class="lab-id">
+              <span class="lab-name">{l.name}</span>
+              <span class="lab-tier mono" data-i18n-en={l.tier} data-i18n-es={l.tierEs}>{l.tier}</span>
+            </div>
+            <span
+              class={`badge ${l.status}`}
+              data-i18n-en={l.status === 'done' ? '✓ Completed' : '● In progress'}
+              data-i18n-es={l.status === 'done' ? '✓ Completado' : '● En curso'}
+            >{l.status === 'done' ? '✓ Completed' : '● In progress'}</span>
+          </div>
+
+          <div class="lab-areas">
+            {l.areas.map((a) => <span class="chip">{a}</span>)}
+          </div>
+
+          <div class="lab-foot">
+            <div class="lab-meta mono">
+              <span>{l.date}</span>
+              <span class="sep">·</span>
+              <span data-i18n-en={`${l.hours}h lab`} data-i18n-es={`${l.hours}h de lab`}>{l.hours}h lab</span>
+              <span class="sep">·</span>
+              <span data-i18n-en={`${l.cpe} CPE credits`} data-i18n-es={`${l.cpe} créditos CPE`}>{l.cpe} CPE credits</span>
+            </div>
+            {l.pdf && (
+              <a class="lab-link mono" href={`${base}${l.pdf}`} target="_blank" rel="noopener">
+                <span data-i18n-en="Certificate" data-i18n-es="Certificado">Certificate</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+
+          <p class="lab-code mono">{l.certId}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .labs { display: grid; gap: 14px; }
+  .lab { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
+  .lab-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .lab-id { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+  .lab-name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  .lab-tier {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple-lit);
+    border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+  .badge { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+  .badge.done { color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 40%, transparent); }
+  .badge.wip  { color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent); }
+
+  .lab-areas { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .lab-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .lab-meta { display: flex; flex-wrap: wrap; gap: 7px; font-size: 0.75rem; color: var(--text-dim); }
+  .sep { color: var(--border-lit); }
+  .lab-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; letter-spacing: 0.04em;
+    color: var(--text-muted);
+    border: 1px solid var(--border-lit);
+    border-radius: 5px;
+    padding: 6px 12px;
+    transition: all .16s ease;
+  }
+  .lab-link:hover { color: var(--purple-lit); border-color: var(--purple); background: var(--surface-2); }
+  .lab-code { font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.06em; margin: -4px 0 0; }
+
+  @media (max-width: 560px) {
+    .lab { padding: 18px; }
+    .lab-name { font-size: 1.15rem; }
+    .lab-foot { align-items: flex-start; flex-direction: column; }
+  }
+</style>
