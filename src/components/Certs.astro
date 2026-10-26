@@ -1,26 +1,34 @@
 ---
+// status: 'done' = examen aprobado | 'path' = path terminado, examen pendiente | 'wip' = en curso.
+// OJO: 'done' se reserva para cuando apruebes el examen. No lo uses antes.
 const certs = [
-  { code: 'CPTS', name: 'Certified Penetration Testing Specialist', nameKey: null, org: 'HTB Academy', status: 'done', note: 'AD · Web · Pivoting · Reporting', noteKey: null },
-  { code: 'CWES', name: 'Certified Web Exploitation Specialist',   nameKey: null, org: 'HTB Academy', status: 'done', note: 'Advanced web exploitation',        noteKey: 'certs.note.cwes' },
-  { code: 'CWEE', name: 'Certified Web Exploitation Expert',        nameKey: null, org: 'HTB Academy', status: 'wip',  note: 'In progress',                      noteKey: 'certs.note.wip' },
-  { code: 'Tec. Desarrollo de Software', name: 'Engineering / Technologist', nameKey: 'certs.name.itla', org: 'ITLA', status: 'wip', note: 'In progress', noteKey: 'certs.note.wip' },
+  { code: 'CAPE', name: 'Certified Active Directory Pentesting Expert', nameKey: null, org: 'HTB Academy', status: 'wip',  note: null,                        noteKey: null },
+  { code: 'COAE', name: 'Certified Offensive AI Expert',                 nameKey: null, org: 'HTB Academy', status: 'wip',  note: null,                        noteKey: null },
+  { code: 'CPTS', name: 'Certified Penetration Testing Specialist',     nameKey: null, org: 'HTB Academy', status: 'path', note: 'AD · Web · Pivoting · Reporting', noteKey: null },
+  { code: 'CWES', name: 'Certified Web Exploitation Specialist',        nameKey: null, org: 'HTB Academy', status: 'path', note: 'Advanced web exploitation', noteKey: 'certs.note.cwes' },
 ];
+
+const BADGE = {
+  done: { key: 'certs.badge.done', text: '✓ Certified' },
+  path: { key: 'certs.badge.path', text: '◐ Path completed · exam pending' },
+  wip:  { key: 'certs.badge.wip',  text: '● In progress' },
+};
 ---
 <section id="certs">
   <div class="wrap">
     <div class="section-head">
       <span class="idx mono">03</span>
-      <h2 data-i18n="certs.title">Certifications</h2>
+      <h2 data-i18n="certs.title">Training &amp; Certifications</h2>
     </div>
     <div class="certs">
       {certs.map((c) => (
         <div class="card cert">
           <div class="cert-top">
             <span class="cert-code mono">{c.code}</span>
-            <span class={`badge ${c.status}`} data-i18n={c.status === 'done' ? 'certs.badge.done' : 'certs.badge.wip'}>{c.status === 'done' ? '✓ Certified' : '● In progress'}</span>
+            <span class={`badge ${c.status}`} data-i18n={BADGE[c.status].key}>{BADGE[c.status].text}</span>
           </div>
-          <p class="cert-name" data-i18n={c.nameKey ?? undefined}>{c.name}</p>
-          <p class="cert-meta mono">{c.org} · <span data-i18n={c.noteKey ?? undefined}>{c.note}</span></p>
+          {c.name && <p class="cert-name" data-i18n={c.nameKey ?? undefined}>{c.name}</p>}
+          <p class="cert-meta mono">{c.org}{c.note && <> · <span data-i18n={c.noteKey ?? undefined}>{c.note}</span></>}</p>
         </div>
       ))}
     </div>
@@ -35,6 +43,13 @@ const certs = [
   .badge { font-family: var(--mono); font-size: 0.68rem; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
   .badge.done { color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 40%, transparent); }
   .badge.wip  { color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent); }
+  .badge.path {
+    color: var(--purple-lit);
+    border: 1px solid color-mix(in srgb, var(--purple) 45%, transparent);
+    white-space: normal;
+    text-align: right;
+    line-height: 1.35;
+  }
   .cert-name { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 6px; }
   .cert-meta { font-size: 0.75rem; color: var(--text-dim); }
   @media (max-width: 560px) { .certs { grid-template-columns: 1fr; } }

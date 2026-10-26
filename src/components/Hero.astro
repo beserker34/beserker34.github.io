@@ -8,9 +8,10 @@ const base = import.meta.env.BASE_URL;
       <h1>Ramces <span class="hl">"4PR3ND1Z"</span></h1>
       <p class="pitch mono" data-i18n="hero.pitch">Offensive Security · Web &amp; Business Logic · Red Team</p>
       <p class="blurb" data-i18n="hero.blurb" data-i18n-html>
-        Offensive security professional (Dominican Republic). Certified <strong>CPTS</strong> and <strong>CWES</strong>,
-        currently completing <strong>CWEE</strong>. I specialize in web exploitation, IDOR, and business logic
-        flaws — where scanners don't reach.
+        Offensive security professional (Dominican Republic). 59 HTB machines solved (Master rank),
+        the <strong>Mythical</strong> Pro Lab completed and 29 published writeups. Currently working through the
+        <strong>CAPE</strong> and <strong>COAE</strong> paths. I specialize in web exploitation, IDOR, and business
+        logic flaws — where scanners don't reach.
       </p>
       <div class="cta">
         <a class="btn btn-primary" href={`${base}#writeups`} data-i18n="hero.cta.writeups">View writeups</a>
@@ -25,12 +26,6 @@ const base = import.meta.env.BASE_URL;
       </div>
       <div class="badge-float badge-float--htb">
         <img src={`${base}img/badge-htb.svg`} alt="HackTheBox" width="20" height="20" />
-      </div>
-      <div class="badge-float badge-float--cpts">
-        <img src={`${base}img/badge-cpts.png`} alt="CPTS" width="34" height="34" />
-      </div>
-      <div class="badge-float badge-float--cwes">
-        <img src={`${base}img/badge-cwes.png`} alt="CWES" width="34" height="34" />
       </div>
     </div>
   </div>
@@ -86,8 +81,6 @@ const base = import.meta.env.BASE_URL;
     animation: float 5.5s ease-in-out infinite;
   }
   .badge-float--htb  { top: -4px; right: 6px; width: 38px; height: 38px; animation-duration: 4.6s; }
-  .badge-float--cpts { bottom: 10px; left: -16px; width: 50px; height: 50px; animation-duration: 6s; animation-delay: .4s; }
-  .badge-float--cwes { bottom: -12px; right: -8px; width: 50px; height: 50px; animation-duration: 5.2s; animation-delay: 1s; }
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -105,6 +98,5 @@ const base = import.meta.env.BASE_URL;
     .hero { padding: 52px 0 44px; }
     .avatar-col { width: 168px; height: 168px; flex-basis: 168px; }
     .avatar-frame { width: 168px; height: 168px; }
-    .badge-float--cpts, .badge-float--cwes { width: 40px; height: 40px; }
   }
 </style>
