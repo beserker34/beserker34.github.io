@@ -1,0 +1,84 @@
+---
+// Motor de traduccion compartido por los dos lados del sitio (/sec y /dev).
+// Dos formas de traducir un elemento:
+//   1. data-i18n="clave"          -> busca la clave en el diccionario I18N de abajo.
+//   2. data-i18n-en / data-i18n-es -> el texto va en los propios atributos, sin tocar el diccionario.
+// Para contenido nuevo prefiere la opcion 2: es autocontenida.
+// Anade data-i18n-html si el texto lleva etiquetas (<strong>, etc.).
+---
+<script>
+  const I18N = {
+    en: {
+      'hero.pitch': 'Offensive Security · Web & Business Logic · Red Team',
+      'hero.blurb': 'Offensive security professional (Dominican Republic). 59 HTB machines solved (Master rank), the <strong>Mythical</strong> Pro Lab completed and 29 published writeups. Currently working through the <strong>CAPE</strong> and <strong>COAE</strong> paths. I specialize in web exploitation, IDOR, and business logic flaws — where scanners don\'t reach.',
+      'hero.cta.writeups': 'View writeups',
+      'stats.title': 'Stats',
+      'stats.label.machines': 'Machines',
+      'stats.label.streak': 'Weekly streak',
+      'stats.label.member': 'Member since',
+      'stats.sub.level': 'Level 73',
+      'stats.sub.solved': 'solved',
+      'stats.sub.weeks': 'weeks · record',
+      'stats.sub.country': 'Dominican Republic',
+      'certs.title': 'Training & Certifications',
+      'certs.badge.done': '✓ Certified',
+      'certs.badge.path': '◐ Path completed · exam pending',
+      'certs.badge.wip': '● In progress',
+      'certs.note.wip': 'In progress',
+      'certs.note.cwes': 'Advanced web exploitation',
+      'contact.title': 'Contact',
+      'contact.cv': 'Download CV (PDF)',
+      'contact.footer.tag': 'Offensive Security · Dominican Republic',
+    },
+    es: {
+      'hero.pitch': 'Seguridad Ofensiva · Web y Lógica de Negocio · Red Team',
+      'hero.blurb': 'Profesional en seguridad ofensiva (RD). 59 máquinas resueltas en HTB (rango Master), Pro Lab <strong>Mythical</strong> completado y 29 writeups publicados. Cursando los paths de <strong>CAPE</strong> y <strong>COAE</strong>. Me especializo en explotación web, IDOR y fallos de lógica de negocio — donde los escáneres no llegan.',
+      'hero.cta.writeups': 'Ver writeups',
+      'stats.title': 'Estadísticas',
+      'stats.label.machines': 'Máquinas',
+      'stats.label.streak': 'Racha semanal',
+      'stats.label.member': 'Miembro desde',
+      'stats.sub.level': 'Nivel 73',
+      'stats.sub.solved': 'resueltas',
+      'stats.sub.weeks': 'semanas · récord',
+      'stats.sub.country': 'República Dominicana',
+      'certs.title': 'Formación y certificaciones',
+      'certs.badge.done': '✓ Certificado',
+      'certs.badge.path': '◐ Path completado · examen pendiente',
+      'certs.badge.wip': '● En curso',
+      'certs.note.wip': 'En curso',
+      'certs.note.cwes': 'Explotación web avanzada',
+      'contact.title': 'Contacto',
+      'contact.cv': 'Descargar CV (PDF)',
+      'contact.footer.tag': 'Seguridad Ofensiva · República Dominicana',
+    },
+  };
+
+  function setLang(lang, opts = {}) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n], [data-i18n-en]').forEach((el) => {
+      let val;
+      if (el.dataset.i18nEn !== undefined) {
+        val = lang === 'es' ? el.dataset.i18nEs : el.dataset.i18nEn;
+      } else {
+        val = I18N[lang][el.getAttribute('data-i18n')];
+      }
+      if (val == null) return;
+      if ('i18nHtml' in el.dataset) el.innerHTML = val;
+      else el.textContent = val;
+    });
+    document.querySelectorAll('.lang-btn').forEach((b) => {
+      b.classList.toggle('is-active', b.dataset.lang === lang);
+    });
+    if (!opts.skipSave) {
+      try { localStorage.setItem('lang', lang); } catch {}
+    }
+  }
+
+  let saved = 'en';
+  try { saved = localStorage.getItem('lang') || 'en'; } catch {}
+  setLang(saved, { skipSave: true });
+  document.querySelectorAll('.lang-btn').forEach((b) => {
+    b.addEventListener('click', () => setLang(b.dataset.lang));
+  });
+</script>

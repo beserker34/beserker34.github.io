@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+import Dev from '../../layouts/Dev.astro';
+import DevNav from '../../components/DevNav.astro';
+import Terminal from '../../components/Terminal.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    const da = a.data.date ? a.data.date.getTime() : 0;
+    const db = b.data.date ? b.data.date.getTime() : 0;
+    return db - da;
+  });
+
+const STATUS = {
+  shipped:  { en: 'shipped',  es: 'terminado' },
+  building: { en: 'building', es: 'en construcción' },
+  learning: { en: 'learning', es: 'aprendiendo' },
+};
+
+// Lo que estoy haciendo ahora mismo. Actualízalo cuando cambie:
+// una sección "now" desactualizada se nota y resta.
+const now = [
+  { en: 'Learning TypeScript and JavaScript properly, writing things by hand before reaching for abstractions.',
+    es: 'Aprendiendo TypeScript y JavaScript en serio, escribiendo las cosas a mano antes de tirar de abstracciones.' },
+  { en: 'Working through the HTB CAPE and COAE paths on the security side.',
+    es: 'Cursando los paths de CAPE y COAE en el lado de seguridad.' },
+  { en: 'Building small tools for my own pentest workflow — the best way I know to have a reason to finish them.',
+    es: 'Construyendo herramientas pequeñas para mi propio flujo de pentest — la mejor forma que conozco de tener motivo para terminarlas.' },
+];
+
+const stack = {
+  'Languages': ['TypeScript', 'JavaScript', 'Python', 'Bash'],
+  'Web':       ['Astro', 'HTML', 'CSS', 'Node'],
+  'Tooling':   ['Git', 'GitHub Actions', 'Linux', 'WSL'],
+  'Security':  ['Burp Suite', 'nmap', 'ffuf', 'BloodHound'],
+};
+
+const ledeEn = "I come to software from the other side: I spent a year taking apart other people's applications before I started writing my own. That shapes what I build — I think about the input nobody validated before I think about the happy path.";
+const ledeEs = 'Llego al software desde el otro lado: pasé un año desarmando aplicaciones ajenas antes de empezar a escribir las mías. Eso marca lo que construyo — pienso en el input que nadie validó antes que en el camino feliz.';
+const contactEn = 'Open to software engineering roles. The security side of my work lives on the other portfolio.';
+const contactEs = 'Abierto a roles de ingeniería de software. El lado de seguridad de mi trabajo vive en el otro portfolio.';
+---
+<Dev title="Ramces Garcia · Software">
+  <DevNav side="dev" />
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="wrap dev-section hero">
+      <p class="eyebrow mono" data-i18n-en="// software engineer · offensive security" data-i18n-es="// ingeniero de software · seguridad ofensiva">
+        // software engineer · offensive security
+      </p>
+
+      <h1 class="display">
+        I build tools<br />and break things.
+      </h1>
+
+      <p class="prose lede" data-i18n-en={ledeEn} data-i18n-es={ledeEs}>{ledeEn}</p>
+
+      <div class="term-wrap">
+        <Terminal />
+      </div>
+    </section>
+
+    <!-- ===================== NOW ===================== -->
+    <section class="wrap dev-section">
+      <p class="dev-section-label" data-i18n-en="Now" data-i18n-es="Ahora">Now</p>
+      <ul class="now-list">
+        {now.map((item) => (
+          <li class="prose" data-i18n-en={item.en} data-i18n-es={item.es}>{item.en}</li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- ===================== PROJECTS ===================== -->
+    <section class="wrap dev-section" id="projects">
+      <p class="dev-section-label" data-i18n-en="Projects" data-i18n-es="Proyectos">Projects</p>
+
+      <div class="proj-list">
+        {projects.map((p) => (
+          <article class="proj">
+            <div class="proj-head">
+              <h2>{p.data.name}</h2>
+              <span
+                class={`proj-status ${p.data.status}`}
+                data-i18n-en={STATUS[p.data.status].en}
+                data-i18n-es={STATUS[p.data.status].es}
+              >{STATUS[p.data.status].en}</span>
+            </div>
+
+            <p class="proj-tagline prose">{p.data.tagline}</p>
+
+            {p.data.highlights.length > 0 && (
+              <ul class="proj-highlights">
+                {p.data.highlights.map((h) => <li>{h}</li>)}
+              </ul>
+            )}
+
+            <div class="proj-foot">
+              <div class="proj-stack mono">
+                {p.data.stack.map((s) => <span class="chip">{s}</span>)}
+              </div>
+              <div class="proj-links mono">
+                {p.data.repo && <a href={p.data.repo} target="_blank" rel="noopener">code ↗</a>}
+                {p.data.demo && <a href={p.data.demo} target="_blank" rel="noopener">live ↗</a>}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {projects.length === 0 && (
+        <p class="prose dim" data-i18n-en="// nothing here yet." data-i18n-es="// aquí todavía no hay nada.">// nothing here yet.</p>
+      )}
+    </section>
+
+    <!-- ===================== STACK ===================== -->
+    <section class="wrap dev-section">
+      <p class="dev-section-label" data-i18n-en="Stack" data-i18n-es="Stack">Stack</p>
+      <dl class="stack">
+        {Object.entries(stack).map(([group, items]) => (
+          <div class="stack-row">
+            <dt class="mono">{group}</dt>
+            <dd>{items.map((i) => <span class="chip">{i}</span>)}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section class="wrap dev-section" id="contact">
+      <p class="dev-section-label" data-i18n-en="Contact" data-i18n-es="Contacto">Contact</p>
+      <p class="prose" data-i18n-en={contactEn} data-i18n-es={contactEs}>{contactEn}</p>
+      <div class="dev-cta">
+        <a class="btn btn-primary" href="mailto:ramcesgarciasosa2005@gmail.com">Email</a>
+        <a class="btn" href="https://github.com/beserker34" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href={base} data-i18n-en="Security portfolio →" data-i18n-es="Portfolio de seguridad →">Security portfolio →</a>
+      </div>
+    </section>
+  </main>
+</Dev>
+
+<style>
+  .hero { padding-top: 64px; }
+  .eyebrow { font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.08em; margin-bottom: 20px; }
+  h1.display { margin-bottom: 28px; }
+  .lede { max-width: 62ch; }
+  .term-wrap { margin-top: 44px; }
+
+  .now-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .now-list li { padding-left: 22px; position: relative; }
+  .now-list li::before {
+    content: '→';
+    position: absolute; left: 0; top: 0.1em;
+    color: var(--purple);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+  }
+
+  .proj-list { display: flex; flex-direction: column; gap: 48px; }
+  .proj-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
+  .proj-status {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .proj-status.shipped  { color: var(--green);    border: 1px solid color-mix(in srgb, var(--green) 40%, transparent); }
+  .proj-status.building { color: var(--amber);    border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent); }
+  .proj-status.learning { color: var(--text-dim); border: 1px solid var(--border-lit); }
+
+  .proj-tagline { font-size: 1.1rem; margin-bottom: 18px; }
+  .proj-highlights { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 22px; }
+  .proj-highlights li {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+    padding-left: 18px;
+    position: relative;
+  }
+  .proj-highlights li::before {
+    content: '·';
+    position: absolute; left: 4px;
+    color: var(--purple);
+    font-weight: 700;
+  }
+
+  .proj-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+  .proj-stack { display: flex; flex-wrap: wrap; gap: 6px; }
+  .proj-links { display: flex; gap: 16px; font-size: 0.78rem; }
+  .proj-links a { color: var(--text-muted); border-bottom: 1px solid var(--border-lit); padding-bottom: 1px; }
+  .proj-links a:hover { color: var(--purple-lit); border-color: var(--purple); }
+
+  .stack { display: flex; flex-direction: column; gap: 18px; }
+  .stack-row { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: start; }
+  .stack-row dt { font-size: 0.74rem; color: var(--text-dim); letter-spacing: 0.08em; padding-top: 4px; }
+  .stack-row dd { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .dev-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .dim { color: var(--text-dim); }
+
+  @media (max-width: 640px) {
+    .hero { padding-top: 40px; }
+    .proj-list { gap: 36px; }
+    .stack-row { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
