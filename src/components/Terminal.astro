@@ -1,49 +1,33 @@
 ---
 // ============================================================
-//  TERMINAL INTERACTIVA  —  ESQUELETO
+//  TERMINAL  —  ESQUELETO
 //
-//  La maqueta y los estilos estan terminados: se ve como una
-//  terminal real y el cursor parpadea. Lo que falta es la logica,
-//  y esa la escribes tu.
+//  No tiene marco ni barra de ventana: el prompt vive directamente
+//  sobre la pagina, como parte del texto del hero. Una ventana falsa
+//  dentro de una pagina es el cliche numero uno de los portfolios de
+//  dev, asi que no la queremos.
 //
-//  Orden sugerido (cada paso funciona por si solo, pruebalo antes
-//  de pasar al siguiente):
-//    1. Capturar lo que el usuario teclea y pintarlo tras el prompt.
-//    2. Al pulsar Enter: mover esa linea al historial y limpiar.
+//  La maqueta y los estilos estan hechos. Falta la logica.
+//
+//  Orden sugerido (cada paso funciona solo, pruebalo antes del siguiente):
+//    1. Capturar lo que se teclea y pintarlo tras el prompt.
+//    2. Al pulsar Enter: mover la linea al historial y limpiar.
 //    3. Un objeto COMMANDS { nombre: () => 'salida' } y buscar en el.
 //    4. Comando no encontrado -> mensaje de error.
 //    5. Historial con flechas arriba/abajo.
 //    6. Autocompletado con Tab.
 //
-//  Pistas para el paso 1: el <input> real esta oculto (opacity 0)
-//  encima de todo. El texto que ves es el <span id="term-typed">.
-//  Escuchas 'input' en el input y copias su .value al span. Asi
-//  tienes un cursor que puedes estilar como quieras y el teclado
-//  movil sigue funcionando.
+//  Pista para el paso 1: el <input> real esta oculto (opacity 0) encima
+//  de la linea. Lo que se ve es el <span id="term-typed">. Escuchas
+//  'input' y copias su .value al span. Asi el cursor es un elemento que
+//  puedes estilar y el teclado del movil sigue funcionando.
 // ============================================================
 ---
 <div class="term" id="term">
-  <div class="term-bar">
-    <span class="term-dot" aria-hidden="true"></span>
-    <span class="term-dot" aria-hidden="true"></span>
-    <span class="term-dot" aria-hidden="true"></span>
-    <span class="term-title mono">visitor@4pr3nd1z ~ </span>
-  </div>
+  <div id="term-history"></div>
 
-  <!-- Las lineas ya ejecutadas se van anadiendo aqui -->
-  <div class="term-body" id="term-history">
-    <p class="term-line mono">
-      <span class="term-prompt">$</span> help
-    </p>
-    <p class="term-out mono" data-i18n-en="Type a command. Try: whoami, ls, about, contact" data-i18n-es="Escribe un comando. Prueba: whoami, ls, about, contact">
-      Type a command. Try: whoami, ls, about, contact
-    </p>
-  </div>
-
-  <!-- Linea activa -->
-  <label class="term-line term-active mono" for="term-input">
-    <span class="term-prompt">$</span>
-    <span id="term-typed"></span><span class="term-cursor" aria-hidden="true"></span>
+  <label class="term-line mono" for="term-input">
+    <span class="term-prompt">$</span><span id="term-typed"></span><span class="term-cursor" aria-hidden="true"></span>
     <input
       id="term-input"
       class="term-input"
@@ -51,9 +35,13 @@
       autocomplete="off"
       autocapitalize="off"
       spellcheck="false"
-      aria-label="Terminal input"
+      aria-label="Terminal"
     />
   </label>
+
+  <p class="term-hint mono" data-i18n-en="try: whoami, ls, about" data-i18n-es="prueba: whoami, ls, about">
+    try: whoami, ls, about
+  </p>
 </div>
 
 <script>
@@ -64,10 +52,10 @@
   const history = document.getElementById('term-history');
 
   if (term && input && typed && history) {
-    // Al hacer clic en cualquier parte de la terminal, el foco va al input.
+    // Clic en cualquier parte -> el foco va al input.
     term.addEventListener('click', () => input.focus());
 
-    // --- PASO 1: reflejar lo tecleado en el span ---
+    // --- PASO 1: reflejar lo tecleado ---
     // input.addEventListener('input', () => { ... });
     //   -> copia input.value dentro de typed.textContent
 
@@ -76,27 +64,23 @@
     //   if (e.key !== 'Enter') return;
     //   const raw = input.value.trim();
     //   if (!raw) return;
-    //   printLine(raw);        // escribe "$ <raw>" en el historial
-    //   printOut(run(raw));    // escribe la salida debajo
+    //   printLine(raw);
+    //   printOut(run(raw));
     //   input.value = '';
     //   typed.textContent = '';
-    //   term.scrollTop = term.scrollHeight;
     // });
 
     // --- PASO 3: la tabla de comandos ---
-    // Cada comando es una funcion que devuelve el texto a imprimir.
-    // Empieza con dos o tres y ve anadiendo.
+    // Cada uno devuelve el texto a imprimir. Empieza con dos o tres.
     //
     // const COMMANDS = {
     //   help:    () => 'available: ' + Object.keys(COMMANDS).join(', '),
-    //   whoami:  () => 'ramces garcia sosa — software engineer / offensive security',
-    //   ls:      () => 'projects/  writeups/  about.txt  contact.txt',
-    //   about:   () => '...',
-    //   contact: () => 'github.com/beserker34 · ramcesgarciasosa2005@gmail.com',
+    //   whoami:  () => '...',
+    //   ls:      () => 'projects/  writeups/  about.txt',
     //   clear:   () => { history.innerHTML = ''; return ''; },
     // };
 
-    // --- PASO 4: resolver un comando ---
+    // --- PASO 4: resolver ---
     // function run(raw) {
     //   const [name, ...args] = raw.split(/\s+/);
     //   const cmd = COMMANDS[name];
@@ -104,17 +88,17 @@
     //   return cmd(args);
     // }
 
-    // --- Ayudantes para pintar (estos si te los dejo hechos) ---
-    // Usan textContent, nunca innerHTML: si usaras innerHTML con lo que
+    // --- Ayudantes de pintado (estos si te los dejo hechos) ---
+    // Usan textContent, nunca innerHTML. Si pintaras con innerHTML lo que
     // teclea el visitante tendrias un XSS en tu propio portfolio, que
-    // para alguien que viene de seguridad seria un mal chiste.
+    // viniendo de seguridad seria mal chiste.
     function printLine(text) {
       const p = document.createElement('p');
       p.className = 'term-line mono';
       const prompt = document.createElement('span');
       prompt.className = 'term-prompt';
       prompt.textContent = '$';
-      p.append(prompt, ' ', text);
+      p.append(prompt, text);
       history.appendChild(p);
     }
 
@@ -129,37 +113,25 @@
 </script>
 
 <style>
-  .term {
-    border: 1px solid var(--border-lit);
-    border-radius: 8px;
-    background: #0d0a16;
-    overflow: hidden;
-    max-height: 320px;
-    overflow-y: auto;
-    cursor: text;
+  .term { cursor: text; }
+
+  .term-line {
+    position: relative;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--text);
   }
-  .term:focus-within { border-color: var(--purple-deep); }
-
-  .term-bar {
-    display: flex; align-items: center; gap: 7px;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    position: sticky; top: 0;
+  .term-prompt { color: var(--purple); margin-right: 0.6ch; user-select: none; }
+  .term-out {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--text-muted);
+    padding-left: 1.6ch;
+    white-space: pre-wrap;
   }
-  .term-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border-lit); }
-  .term-title { font-size: 0.7rem; color: var(--text-dim); margin-left: 6px; }
 
-  .term-body { padding: 14px 14px 0; }
-  .term-line, .term-out { font-size: 0.82rem; line-height: 1.7; }
-  .term-line { color: var(--text); }
-  .term-out  { color: var(--text-muted); padding-left: 16px; white-space: pre-wrap; }
-  .term-prompt { color: var(--purple); margin-right: 7px; user-select: none; }
-
-  .term-active { display: flex; align-items: center; padding: 0 14px 14px; position: relative; }
-
-  /* El input real es invisible pero sigue recibiendo el teclado:
-     asi el cursor es un elemento que puedo estilar y el movil funciona. */
+  /* El input real es invisible pero recibe el teclado: asi el cursor es
+     un elemento que puedo estilar y el movil sigue funcionando. */
   .term-input {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
@@ -173,10 +145,17 @@
     display: inline-block;
     width: 8px; height: 1.05em;
     background: var(--purple);
-    margin-left: 2px;
     vertical-align: text-bottom;
     animation: term-blink 1.1s step-end infinite;
   }
   @keyframes term-blink { 50% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .term-cursor { animation: none; } }
+
+  .term-hint {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    padding-left: 1.6ch;
+    margin-top: 2px;
+  }
+  .term:focus-within .term-hint { opacity: 0; transition: opacity .2s ease; }
 </style>
