@@ -21,32 +21,46 @@ const STATUS = {
 };
 
 const intro = {
-  en: "I write software. I got here through security, which is a strange order to do it in: I spent a year taking apart other people's applications before I started writing my own. It left me with a habit I can't shake — I think about the input nobody validated before I think about the happy path.",
-  es: 'Escribo software. Llegué por el lado de la seguridad, que es un orden raro de hacerlo: pasé un año desarmando aplicaciones ajenas antes de escribir las mías. Me dejó una costumbre que no se me quita — pienso en el input que nadie validó antes que en el camino feliz.',
+  en: "I'm a software engineer who came to code through offensive security. For a year I audited other people's applications — so when I build my own, I reach for the unvalidated input before the happy path. That's my edge: I write code thinking about how it breaks, not just how it works.",
+  es: 'Soy ingeniero de software que llegó al código por la seguridad ofensiva. Durante un año audité aplicaciones ajenas — así que cuando construyo las mías, voy al input sin validar antes que al camino feliz. Esa es mi ventaja: escribo código pensando en cómo se rompe, no solo en cómo funciona.',
 };
 
-// Esta seccion lleva fecha a proposito. Una pagina "ahora" sin fecha no
-// dice nada; con fecha dice que alguien la mantiene. Actualizala o quitala.
-const nowDate = { en: 'November 2026', es: 'Noviembre 2026' };
-const nowText = {
-  en: "I'm learning TypeScript and JavaScript properly rather than widely — writing things by hand first and reaching for a library after, which is slower and so far worth it. On the security side I'm working through the CAPE and COAE paths. Most of what I build starts as a small tool for my own pentest work, which is the only way I've found to reliably finish anything.",
-  es: 'Estoy aprendiendo TypeScript y JavaScript a fondo en vez de a lo ancho — escribo las cosas a mano primero y tiro de librería después, que es más lento y de momento merece la pena. En el lado de seguridad voy cursando los paths de CAPE y COAE. Casi todo lo que construyo empieza siendo una herramienta pequeña para mi propio trabajo de pentest, que es la única forma que he encontrado de terminar algo de verdad.',
+// Lleva fecha a proposito: dice que hay alguien manteniendo esto.
+const foundationDate = { en: 'November 2026', es: 'Noviembre 2026' };
+
+const foundation = {
+  en: "My foundation isn't self-taught by accident. I'm working through a self-designed curriculum built on MIT's OpenCourseWare 6-3 track, following the real prerequisite chain instead of chasing tutorials: CS fundamentals in Python, then C and assembly, data structures, algorithms, and systems. I pair it with daily algorithmic practice on LeetCode.",
+  es: 'Que sea autodidacta no es por casualidad. Sigo un plan de estudios propio montado sobre el track 6-3 del OpenCourseWare del MIT, respetando la cadena real de prerrequisitos en vez de ir saltando de tutorial en tutorial: fundamentos de CS en Python, luego C y ensamblador, estructuras de datos, algoritmos y sistemas. Lo acompaño con práctica algorítmica diaria en LeetCode.',
+};
+
+const foundationClose = {
+  en: "The goal isn't to finish a course. It's to understand software from the logic gate up.",
+  es: 'El objetivo no es terminar un curso. Es entender el software desde la puerta lógica hacia arriba.',
+};
+
+// La cadena de prerrequisitos, en el orden real en que se cursa.
+// Las flechas aqui significan "habilita", no son decoracion.
+const chain = ['python', 'c & assembly', 'data structures', 'algorithms', 'systems'];
+
+const projectsIntro = {
+  en: 'My projects usually start as small security tools and grow from there. I ship real things, document my work in the open, and care more about craft and correctness than collecting credentials.',
+  es: 'Mis proyectos suelen empezar siendo herramientas pequeñas de seguridad y crecen desde ahí. Publico cosas que funcionan, documento mi trabajo en abierto, y me importa más el oficio y la corrección que coleccionar credenciales.',
 };
 
 const stackText = {
-  en: 'TypeScript, JavaScript, Python and bash day to day. Astro for this site. Linux and WSL, because the other half of my work lives there. Git and GitHub Actions.',
-  es: 'TypeScript, JavaScript, Python y bash en el día a día. Astro para este sitio. Linux y WSL, porque la otra mitad de mi trabajo vive ahí. Git y GitHub Actions.',
+  en: 'Python, TypeScript, JavaScript and bash day to day; C and assembly as the curriculum reaches them. Astro for this site. Linux and WSL, because the other half of my work lives there. Git and GitHub Actions.',
+  es: 'Python, TypeScript, JavaScript y bash en el día a día; C y ensamblador según los va alcanzando el plan. Astro para este sitio. Linux y WSL, porque la otra mitad de mi trabajo vive ahí. Git y GitHub Actions.',
 };
 
-const contactText = {
-  en: 'Open to software engineering work. The security half of what I do is on the other side of this site.',
-  es: 'Abierto a trabajo de ingeniería de software. La mitad de seguridad de lo que hago está en el otro lado de este sitio.',
+const footerText = {
+  en: 'Bilingual (Spanish/English) · Dominican Republic · Open to remote software engineering roles.',
+  es: 'Bilingüe (español/inglés) · República Dominicana · Abierto a roles remotos de ingeniería de software.',
 };
 
-const builtHeading = { en: "What I've built", es: 'Lo que he construido' };
-const nowHeading   = { en: 'Right now', es: 'Ahora mismo' };
-const stackHeading = { en: 'Tools', es: 'Herramientas' };
-const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada.' };
+const foundationHeading = { en: 'Foundation', es: 'Formación' };
+const builtHeading      = { en: "What I've built", es: 'Lo que he construido' };
+const stackHeading      = { en: 'Tools', es: 'Herramientas' };
+const emptyProjects     = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada.' };
 ---
 <Dev title="Ramces Garcia Sosa">
   <DevNav side="dev" />
@@ -61,21 +75,34 @@ const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada
       </div>
     </section>
 
-    <!-- ===================== AHORA ===================== -->
-    <section class="wrap block">
-      <h2 data-i18n-en={nowHeading.en} data-i18n-es={nowHeading.es}>{nowHeading.en}</h2>
-      <p class="meta date" data-i18n-en={nowDate.en} data-i18n-es={nowDate.es}>{nowDate.en}</p>
-      <p data-i18n-en={nowText.en} data-i18n-es={nowText.es}>{nowText.en}</p>
+    <!-- ===================== FORMACION =====================
+         Esta es la seccion con mas peso de la pagina y es
+         deliberado: el curriculo propio sobre el 6-3 del MIT es
+         lo mas especifico que hay aqui, y lo especifico es lo
+         que hace que una pagina no parezca una plantilla.
+    -->
+    <section class="wrap block block--major" id="foundation">
+      <h2 data-i18n-en={foundationHeading.en} data-i18n-es={foundationHeading.es}>{foundationHeading.en}</h2>
+      <p class="meta date" data-i18n-en={foundationDate.en} data-i18n-es={foundationDate.es}>{foundationDate.en}</p>
+
+      <p class="lead" data-i18n-en={foundation.en} data-i18n-es={foundation.es}>{foundation.en}</p>
+
+      <p class="chain mono">
+        {chain.map((step, i) => (
+          <>
+            {i > 0 && <span class="chain-arrow" aria-hidden="true">→</span>}
+            <span class="chain-step">{step}</span>
+          </>
+        ))}
+      </p>
+
+      <p class="close" data-i18n-en={foundationClose.en} data-i18n-es={foundationClose.es}>{foundationClose.en}</p>
     </section>
 
-    <!-- ===================== PROYECTOS =====================
-         Esta seccion es la que mas sitio ocupa. Es deliberado:
-         el ritmo desigual es lo que distingue una pagina de una
-         plantilla. Si algun dia hay diez proyectos, el que mas
-         te importe va primero con `featured: true`.
-    -->
-    <section class="wrap block block--major" id="projects">
+    <!-- ===================== PROYECTOS ===================== -->
+    <section class="wrap block" id="projects">
       <h2 data-i18n-en={builtHeading.en} data-i18n-es={builtHeading.es}>{builtHeading.en}</h2>
+      <p class="section-intro" data-i18n-en={projectsIntro.en} data-i18n-es={projectsIntro.es}>{projectsIntro.en}</p>
 
       {projects.map((p) => (
         <article class="proj">
@@ -114,19 +141,14 @@ const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada
     <!-- =====================================================
          AQUI VA LO TUYO.
 
-         Esta es la pieza que hace que una pagina no parezca
-         generada: algo que no sirve para que te contraten.
-         Gazi tiene una galeria de arte. Arte. No le sirve de
-         nada para conseguir trabajo y es justo por eso que su
-         sitio se siente de una persona.
+         Falta todavia la pieza que no sirve para que te
+         contraten: musica, dibujo, un juego, una obsesion rara.
+         Gazi tiene una galeria de arte, que no le sirve de nada
+         para conseguir trabajo, y es justo por eso que su sitio
+         se siente de una persona.
 
-         Cuando me contestes las tres preguntas, esto se llena:
-           - lo que pondrias que no sirve para que te contraten
-           - como le explicas a un amigo lo que haces
-           - en que te metes demasiado a fondo
-
-         Hasta entonces va comentado: una seccion vacia con un
-         titulo de relleno seria peor que no tenerla.
+         Va comentado hasta que me digas que es: una seccion
+         vacia con titulo de relleno seria peor que no tenerla.
 
     <section class="wrap block">
       <h2>...</h2>
@@ -134,17 +156,14 @@ const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada
     </section>
     -->
 
-    <!-- ===================== COLA =====================
-         Herramientas y contacto van comprimidos y en pequeno:
-         son informacion de referencia, no argumento.
-    -->
+    <!-- ===================== COLA ===================== -->
     <section class="wrap block block--minor">
       <h2 data-i18n-en={stackHeading.en} data-i18n-es={stackHeading.es}>{stackHeading.en}</h2>
       <p class="small" data-i18n-en={stackText.en} data-i18n-es={stackText.es}>{stackText.en}</p>
     </section>
 
     <footer class="wrap block block--minor" id="contact">
-      <p class="small" data-i18n-en={contactText.en} data-i18n-es={contactText.es}>{contactText.en}</p>
+      <p class="small" data-i18n-en={footerText.en} data-i18n-es={footerText.es}>{footerText.en}</p>
       <p class="meta links">
         <a href="mailto:ramcesgarciasosa2005@gmail.com">ramcesgarciasosa2005@gmail.com</a>
         <span class="sep"> · </span>
@@ -167,10 +186,29 @@ const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada
   .intro { font-size: 1.32rem; line-height: 1.52; max-width: 30em; margin-top: 30px; }
   .term-slot { margin-top: 56px; max-width: 46em; }
 
-  .date { margin: -2px 0 14px; }
+  .date { margin: -2px 0 16px; }
+  .lead { font-size: 1.12rem; max-width: 38em; }
+  .close { max-width: 34em; color: var(--text); }
+  .section-intro { max-width: 38em; margin-bottom: 8px; }
+
+  /* La cadena de prerrequisitos. Las flechas son semanticas
+     (habilita), no adorno, y por eso se quedan. */
+  .chain {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.55em;
+    font-size: 0.78rem;
+    margin: 26px 0 28px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .chain-step { color: var(--text-muted); }
+  .chain-step:first-of-type { color: var(--purple-lit); }
+  .chain-arrow { color: var(--text-dim); }
 
   .proj { margin-top: 44px; }
-  .proj:first-of-type { margin-top: 28px; }
   .proj h3 {
     font-family: 'Newsreader', Georgia, serif;
     font-weight: 400;
@@ -181,8 +219,8 @@ const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada
   .proj .meta { margin: 6px 0 16px; }
   .proj-tagline { color: var(--text-muted); }
 
-  /* Viñetas normales. Un glifo decorativo propio en cada linea es
-     justo el tipo de detalle que delata una plantilla. */
+  /* Viñetas normales: un glifo decorativo propio en cada linea
+     es justo el detalle que delata una plantilla. */
   .proj-highlights {
     margin: 0 0 18px 1.1em;
     padding: 0;
@@ -205,5 +243,6 @@ const emptyProjects = { en: 'Nothing here yet.', es: 'Aquí todavía no hay nada
     .block--major { padding-top: 68px; }
     .intro { font-size: 1.15rem; margin-top: 22px; }
     .term-slot { margin-top: 36px; }
+    .chain { font-size: 0.72rem; gap: 0.4em; }
   }
 </style>
